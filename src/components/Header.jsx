@@ -16,7 +16,7 @@ export default function Header() {
 
     return (
         <header className="bg-purple-800 text-white shadow-md py-4 px-6 flex justify-between items-center">
-            <div>
+            <div className='flex items-center gap-2'>
                 <SidebarTrigger />
                 <h1 className="text-2xl font-bold">Canteen IMS</h1>
             </div>
