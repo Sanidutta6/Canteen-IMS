@@ -10,11 +10,19 @@ import {
   Settings,
   Suppliers
 } from "@/pages/index"
+import { AuthProvider } from './contexts/AuthContext'
+import { Toaster } from './components/ui/toaster'
+import { ThemeProvider } from './contexts/theme-provider'
+import Protected from './components/Protected'
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />
+  },
+  {
     path: "/",
-    element: <RootLayout />,
+    element: <Protected authRequired={true}><RootLayout /></Protected>,
     children: [
       {
         path: "/",
@@ -27,10 +35,6 @@ const router = createBrowserRouter([
       {
         path: "/inventory/:id", // Corrected typo
         element: <InventoryItem />
-      },
-      {
-        path: "/login",
-        element: <Login />
       },
       {
         path: "/orders",
@@ -54,7 +58,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <RouterProvider router={router} />
+        <Toaster />
+      </ThemeProvider>
+    </AuthProvider>
   )
 }
 

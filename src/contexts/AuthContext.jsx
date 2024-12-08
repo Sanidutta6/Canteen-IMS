@@ -1,51 +1,98 @@
-"use client"
+import React, { createContext, useState, useContext, useEffect } from "react";
 
-import React, { createContext, useState, useContext, useEffect } from 'react'
-
-const AuthContext = createContext(undefined)
+const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    // Function to parse cookies
+    const getCookieValue = (name) => {
+        const cookie = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(`${name}=`));
+        return cookie ? decodeURIComponent(cookie.split("=")[1]) : null;
+    };
 
     useEffect(() => {
-        // Check for existing session
-        const storedUser = localStorage.getItem('user')
-        if (storedUser) {
-            setUser(JSON.parse(storedUser))
-        }
-    }, [])
+        const checkSession = async () => {
+            setLoading(true);
+            try {
+                const userData = getCookieValue("userData");
+                if (userData) {
+                    const parsedUser = JSON.parse(userData);
+                    setUser(parsedUser);
+                    setIsAuthenticated(true);
+                } else {
+                    setUser(null);
+                    setIsAuthenticated(false);
+                }
+            } catch (error) {
+                console.error("Failed to parse user data from cookies:", error);
+                setUser(null);
+                setIsAuthenticated(false);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkSession();
+    }, []);
 
     const login = async (email, password) => {
-        // This is a mock login. In a real app, you'd call an API here.
-        if (email === 'manager@example.com' && password === 'password') {
-            const user = { id: '1', name: 'Manager', role: 'manager' }
-            setUser(user)
-            localStorage.setItem('user', JSON.stringify(user))
-        } else if (email === 'staff@example.com' && password === 'password') {
-            const user = { id: '2', name: 'Staff', role: 'staff' }
-            setUser(user)
-            localStorage.setItem('user', JSON.stringify(user))
-        } else {
-            throw new Error('Invalid credentials')
+        setLoading(true);
+        try {
+            // Mock login logic
+            let user = null;
+            if (email === "manager@example.com" && password === "password") {
+                user = { id: "1", name: "Manager", role: "manager" };
+            } else if (email === "staff@example.com" && password === "password") {
+                user = { id: "2", name: "Staff", role: "staff" };
+            } else {
+                throw new Error("Invalid credentials");
+            }
+
+            setUser(user);
+            setIsAuthenticated(true);
+            document.cookie = `userData=${encodeURIComponent(
+                JSON.stringify(user)
+            )}; path=/; secure; samesite=strict`;
+        } catch (error) {
+            console.error("Login failed:", error);
+            setUser(null);
+            setIsAuthenticated(false);
+            throw error; // Let the caller handle the error
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     const logout = () => {
-        setUser(null)
-        localStorage.removeItem('user')
-    }
+        setLoading(true);
+        try {
+            setUser(null);
+            setIsAuthenticated(false);
+            document.cookie =
+                "userData=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider
+            value={{ user, isAuthenticated, loading, login, logout }}
+        >
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 
 export const useAuth = () => {
-    const context = useContext(AuthContext)
-    if (context === undefined) {
-        throw new Error('useAuth must be used within an AuthProvider')
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth must be used within an AuthProvider");
     }
-    return context
-}
+    return context;
+};

@@ -13,6 +13,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 
 const initialOrders = [
@@ -128,15 +135,17 @@ export default function Orders() {
                                             </div>
                                         </DialogContent>
                                     </Dialog>
-                                    <select
-                                        value={order.status}
-                                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                                        className="border rounded px-2 py-1"
-                                    >
-                                        <option value="pending">Pending</option>
-                                        <option value="completed">Completed</option>
-                                        <option value="cancelled">Cancelled</option>
-                                    </select>
+
+                                    <Select value={order.status} onChange={(value) => { handleStatusChange(order.id, value) }}>
+                                        <SelectTrigger className="w-[150px]">
+                                            <SelectValue placeholder="Theme" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="pending">Pending</SelectItem>
+                                            <SelectItem value="completed">Completed</SelectItem>
+                                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </TableCell>
                         </TableRow>

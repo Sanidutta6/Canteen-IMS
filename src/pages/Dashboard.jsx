@@ -8,13 +8,13 @@ const calculateDaysUntilDepletion = (quantity, dailyDemand) => {
 }
 
 const data = [
-  { name: 'Mon', sales: 4000, stock: 24, dailyDemand: 3 },
-  { name: 'Tue', sales: 3000, stock: 13, dailyDemand: 2 },
-  { name: 'Wed', sales: 2000, stock: 98, dailyDemand: 5 },
-  { name: 'Thu', sales: 2780, stock: 39, dailyDemand: 4 },
-  { name: 'Fri', sales: 1890, stock: 8, dailyDemand: 2 },
-  { name: 'Sat', sales: 2390, stock: 38, dailyDemand: 3 },
-  { name: 'Sun', sales: 3490, stock: 43, dailyDemand: 4 },
+  { name: 'Product A', sales: 4000, stock: 24, dailyDemand: 3 },
+  { name: 'Product B', sales: 3000, stock: 13, dailyDemand: 2 },
+  { name: 'Product C', sales: 2000, stock: 98, dailyDemand: 5 },
+  { name: 'Product D', sales: 2780, stock: 39, dailyDemand: 4 },
+  { name: 'Product E', sales: 1890, stock: 8, dailyDemand: 2 },
+  { name: 'Product F', sales: 2390, stock: 38, dailyDemand: 3 },
+  { name: 'Product G', sales: 3490, stock: 43, dailyDemand: 4 },
 ]
 
 export default function Dashboard() {
@@ -56,38 +56,40 @@ export default function Dashboard() {
           <p className="text-xs text-muted-foreground">2 new this month</p>
         </CardContent>
       </Card>
-      <Card className="col-span-4">
-        <CardHeader>
-          <CardTitle>Weekly Overview</CardTitle>
-        </CardHeader>
-        <CardContent className="pl-2">
-          <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="sales" fill="#8884d8" />
-              <Bar dataKey="stock" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-      <Card className="col-span-4">
-        <CardHeader>
-          <CardTitle>Low Stock Items</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {data.filter(item => item.stock <= 10).map(item => (
-              <Badge key={item.name} variant="destructive">
-                {item.name}: {item.stock} ({calculateDaysUntilDepletion(item.stock, item.dailyDemand)} days left)
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="col-span-4 grid grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Weekly Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="sales" fill="#8884d8" />
+                <Bar dataKey="stock" fill="#82ca9d" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Low Stock Items</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {data.filter(item => item.stock <= 10).map(item => (
+                <Badge key={item.name} variant="destructive">
+                  {item.name}: {item.stock} ({calculateDaysUntilDepletion(item.stock, item.dailyDemand)} days left)
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

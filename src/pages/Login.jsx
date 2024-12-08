@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
+import { CookingPot } from 'lucide-react'
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -28,8 +29,12 @@ export default function Login() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen bg-background">
             <Card className="w-[350px]">
+                <h2 className='mt-5 text-2xl font-semibold flex items-center justify-center gap-2'>
+                    <CookingPot className="h-6 w-6 object-contain" />
+                    Canteen IMS
+                </h2>
                 <CardHeader>
                     <CardTitle>Login</CardTitle>
                     <CardDescription>Enter your credentials to access the system.</CardDescription>

@@ -1,5 +1,5 @@
 import { Bell, User, LogOut } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '@/contexts/AuthContext'
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -10,6 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SidebarTrigger } from './ui/sidebar'
+import { ModeToggle } from './ModeToggle'
 
 export default function Header() {
     const { user, logout } = useAuth()
@@ -24,6 +25,7 @@ export default function Header() {
                 <Button variant="ghost" size="icon">
                     <Bell className="h-5 w-5" />
                 </Button>
+                <ModeToggle />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
